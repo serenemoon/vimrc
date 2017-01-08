@@ -54,17 +54,29 @@ let g:UltiSnipsExpandTrigger='<C-L>'
 " configuration for YCM {{{
 let g:ycm_confirm_extra_conf=0
 " }}}
+" configuration for easy align {{{
+vmap    <ENTER>     <Plug>(EasyAlign)
+nmap    gl          <Plug>(EasyAlign)
+" }}}
 " global configurations aka sets {{{
 set backspace=indent,eol,start
-set cursorcolumn
-set cursorline
-set bomb
+set incsearch hlsearch
+set cursorcolumn cursorline
+set ts=4
+set sw=4
+set autoindent
+set expandtab
+set fdm=marker
+set number
+set relativenumber
 set fileencodings=ucs-bom,utf-8,cp936,latin1
 filetype plugin indent on
 syntax on
 let g:session_autosave = 'yes'
 " }}} end of global conf
-
+" CtrlP config {{{
+set wildignore+=*.so,*.swp,*.zip
+" }}} end of CtrlP
 "set makeprg=mingw32-make.exe
 " Maps: {{{
 nnoremap <Leader>ww	    :w<CR>
@@ -100,7 +112,9 @@ nnoremap <Leader>tn :tabnext<CR>
 nnoremap <Leader>tp :tabprev<CR>
 nnoremap <Leader>tl :tablast<CR>
 nnoremap <Leader>tf :tabfirst<CR>
-
+" map F12 for python run
+noremap  <F12>      :!python3 %<CR>
+noremap! <F12>      <ESC>:w<CR>:!python3 %<CR> 
 " }}} end of Maps
 inoremap (  ()<Left>
 inoremap [  []<Left>
@@ -108,27 +122,16 @@ inoremap {  {}<Left>
 "}])
 inoremap "  ""<Left>
 
-set ts=4
-set sw=4
-set autoindent
-set expandtab
-set fdm=marker
-set number
-set relativenumber
 unlet mapleader
 
-augroup Makefiles
-au!
-au BufRead,BufNewFile Makefile set noet
-augroup END
+function! OpenNERDTree()
+    if !empty(expand("%")) && expand("%") !~ "NERD"
+        cd %:p:h
+    endif
+    NERDTree
+endfunction
 
-augroup C_CPP
-au!
-au FileType c,cc,cpp    set cindent
-augroup END
-
-nnoremap <F3>   :cd %:p:h<CR> :NERDTree<CR>
-nnoremap <F4>   :NERDTree<CR>
+nnoremap <F3>   :call OpenNERDTree()<CR>
 nnoremap <F2>   :TagbarToggle<CR>
 " configuration for cscope {{{
 " cscope key maps
@@ -186,6 +189,14 @@ function! EditForGTEST()
     norm ggO#include "gtest/gtest.h
 endfunction
 
+" autocmd for different file types {{{
+augroup FTAUGRP
+    au!
+    " python & Makefile files no expand tab "
+    au FileType python,make     set noet | set ts=4
+    au FileType c,cc,cpp        set cindent
+augroup END
+" }}}
 ""let Tlist_Show_One_File=0                    " 只显示当前文件的tags
 ""let Tlist_Exit_OnlyWindow=1                  " 如果Taglist窗口是最后一个窗口则退出Vim
 ""let Tlist_Use_Right_Window=1                 " 在右侧窗口中显示
