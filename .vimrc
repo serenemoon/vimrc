@@ -148,7 +148,7 @@ nnoremap    <F5>    :call BuildCscopeDatabase(0)<CR>
 nnoremap    <S-F5>  :call BuildCscopeDatabase(1)<CR>
 
 function! FindCSDB()
-    let csdb=findfile('cscope.out',';')    
+    let csdb=findfile('cscope.out',';')
     if csdb == 'cscope.out'
         let csdb=getcwd() . '/cscope.out'
     endif
@@ -186,6 +186,7 @@ function! EditForGTEST()
     %s/void \(.*\)::\(.*\)()/TEST(\1,\2)/g
     %s/CPPUNIT_ASSERT/EXPECT_TRUE/g
     exec "g/" . delete_lines . "/d"
+    exec "%s/{\_s*}//g"
     norm ggO#include "gtest/gtest.h
 endfunction
 
@@ -201,4 +202,4 @@ augroup END
 ""let Tlist_Exit_OnlyWindow=1                  " 如果Taglist窗口是最后一个窗口则退出Vim
 ""let Tlist_Use_Right_Window=1                 " 在右侧窗口中显示
 ""let Tlist_File_Fold_Auto_Close=1             " 自动折叠
-" vim:ts=4:sw=4:ft=vim:
+" vim:ts=4:sw=4:ft=vim:noet
