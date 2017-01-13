@@ -17,6 +17,11 @@ Plugin 'majutsushi/tagbar'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-unimpaired'
+Plugin 'tpope/vim-fugitive'
+Plugin 'xolox/vim-notes'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-session'
+
 
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'easymotion/vim-easymotion'
@@ -36,6 +41,7 @@ filetype plugin indent on
 " }}} end of bundle
 colorscheme molokai
 let mapleader=","
+
 " configuration for airline {{{
 set t_Co=256
 set laststatus=2
@@ -47,6 +53,9 @@ let g:airline_right_sep=''
 " }}} end of airline
 " configuration for easymotion {{{
 let g:EasyMotion_space_jump_first = 1
+map s <Plug>(easymotion-s)
+map j <Plug>(easymotion-j)
+map k <Plug>(easymotion-k)
 " }}} end of easymotion
 " configuration for ultisnips {{{
 let g:UltiSnipsExpandTrigger='<C-L>'
@@ -59,16 +68,15 @@ vmap    <ENTER>     <Plug>(EasyAlign)
 nmap    gl          <Plug>(EasyAlign)
 " }}}
 " global configurations aka sets {{{
+scriptencoding utf-8
 set backspace=indent,eol,start
 set incsearch hlsearch
 set cursorcolumn cursorline
 set ts=4
 set sw=4
 set autoindent
-set expandtab
-set fdm=marker
-set number
-set relativenumber
+set noexpandtab
+set number relativenumber
 set fileencodings=ucs-bom,utf-8,cp936,latin1
 filetype plugin indent on
 syntax on
@@ -92,6 +100,7 @@ nnoremap <Leader>qa     :qa<CR>
 ""nnoremap <Leader>bc	:bunload<CR>
 ""nnoremap <Tab>      :bnext<cr>
 ""nnoremap <S-Tab>    :bprev<cr>
+nnoremap n		:nohl<CR>
 nnoremap <Leader>nh :nohl<CR>
 
 "resize window size
@@ -103,7 +112,11 @@ nnoremap <Leader>vr- :vertical resize -3<cr>
 nnoremap <Leader>fs A//{{{<esc>
 nnoremap <Leader>fe A//}}}<esc>
 
+inoremap e	A
+inoremap b	I
+
 nnoremap w    :w<CR>
+nnoremap q	:q<CR>
 nnoremap <Leader>h  <C-W>h
 nnoremap <Leader>j  <C-W>j
 nnoremap <Leader>k  <C-W>k
@@ -114,21 +127,19 @@ nnoremap <Leader>tl :tablast<CR>
 nnoremap <Leader>tf :tabfirst<CR>
 " map F12 for python run
 noremap  <F12>      :!python3 %<CR>
-noremap! <F12>      <ESC>:w<CR>:!python3 %<CR> 
+noremap! <F12>      <ESC>:w<CR>:!python3 %<CR>
 " }}} end of Maps
 inoremap (  ()<Left>
 inoremap [  []<Left>
 inoremap {  {}<Left>
 "}])
 inoremap "  ""<Left>
-
 unlet mapleader
-
 function! OpenNERDTree()
-    if !empty(expand("%")) && expand("%") !~ "NERD"
-        cd %:p:h
-    endif
-    NERDTree
+	if !empty(expand("%")) && expand("%") !~ "NERD"
+		cd %:p:h
+	endif
+	NERDTree
 endfunction
 
 nnoremap <F3>   :call OpenNERDTree()<CR>
@@ -148,55 +159,64 @@ nnoremap    <F5>    :call BuildCscopeDatabase(0)<CR>
 nnoremap    <S-F5>  :call BuildCscopeDatabase(1)<CR>
 
 function! FindCSDB()
-    let csdb=findfile('cscope.out',';')
-    if csdb == 'cscope.out'
-        let csdb=getcwd() . '/cscope.out'
-    endif
-    return csdb
+	let csdb=findfile('cscope.out',';')
+	if csdb == 'cscope.out'
+		let csdb=getcwd() . '/cscope.out'
+	endif
+	return csdb
 endfunction
 if has("cscope")
-    set csto=1
-    set cst
-    set nocsverb
-    let csdb=FindCSDB()
-    if !empty(csdb)
-        exec "cs add " . csdb . " ". substitute(csdb, '/cscope.out$', '', '')
-    endif
-    set csverb
+	set csto=1
+	set cst
+	set nocsverb
+	let csdb=FindCSDB()
+	if !empty(csdb)
+		exec "cs add " . csdb . " ". substitute(csdb, '/cscope.out$', '', '')
+	endif
+	set csverb
 endif
 
 function! BuildCscopeDatabase(rebuild)
-    let csdb=FindCSDB()
-    let cwd=getcwd()
-    if !empty(csdb)
-        exec "cs kill " . csdb
-        exec "cd " . substitute(csdb, '/cscope.out$', '', '')
-    endif
-    if empty(csdb) || a:rebuild == 1
-        call delete('cscope.out')
-        silent !cscope -Rb
-    endif
-    exec "cs add cscope.out " . getcwd()
-    exec "cd " . cwd
+	let csdb=FindCSDB()
+	let cwd=getcwd()
+	if !empty(csdb)
+		exec "cs kill " . csdb
+		exec "cd " . substitute(csdb, '/cscope.out$', '', '')
+	endif
+	if empty(csdb) || a:rebuild == 1
+		call delete('cscope.out')
+		silent !cscope -Rb
+	endif
+	exec "cs add cscope.out " . getcwd()
+	exec "cd " . cwd
 endfunction
 " }}} end of cscope
 
 function! EditForGTEST()
-    let delete_lines="SourcePrefix.h\\|CExampleTest.h\\|CPPUNIT_TEST\\|setUp\\|tearDown"
-    %s/void \(.*\)::\(.*\)()/TEST(\1,\2)/g
-    %s/CPPUNIT_ASSERT/EXPECT_TRUE/g
-    exec "g/" . delete_lines . "/d"
-    exec "%s/{\_s*}//g"
-    norm ggO#include "gtest/gtest.h
+	let delete_lines="SourcePrefix.h\\|CExampleTest.h\\|CPPUNIT_TEST\\|setUp\\|tearDown"
+	%s/void \(.*\)::\(.*\)()/TEST(\1,\2)/g
+	%s/CPPUNIT_ASSERT/EXPECT_TRUE/g
+	exec "g/" . delete_lines . "/d"
+	exec "%s/{\_s*}//g"
+	norm ggO#include "gtest/gtest.h
 endfunction
 
 " autocmd for different file types {{{
 augroup FTAUGRP
-    au!
-    " python & Makefile files no expand tab "
-    au FileType python,make     set noet | set ts=4
-    au FileType c,cc,cpp        set cindent
+	au!
+	" python & Makefile files no expand tab "
+	au FileType python,make     set noet | set ts=4
+	au FileType c,cc,cpp        set cindent
+	au FileType vim 			set fdm=marker
 augroup END
+" }}}
+
+" project specific settings {{{
+if getcwd() =~ 'hione'
+	set path=.,/home/warm/Doc/Code/hione/kernel/linux-4.1/include,
+	cs add ~/Doc/cscope/kernel/cscope.out
+	cs add ~/Doc/cscope/hisi_ap/cscope.out
+endif
 " }}}
 ""let Tlist_Show_One_File=0                    " 只显示当前文件的tags
 ""let Tlist_Exit_OnlyWindow=1                  " 如果Taglist窗口是最后一个窗口则退出Vim
