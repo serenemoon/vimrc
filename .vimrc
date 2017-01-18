@@ -22,7 +22,6 @@ Plugin 'xolox/vim-notes'
 Plugin 'xolox/vim-misc'
 Plugin 'xolox/vim-session'
 
-
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'junegunn/vim-easy-align'
@@ -31,6 +30,7 @@ Plugin 'dkprice/vim-easygrep'
 Plugin 'minibufexplorerpp'
 Plugin 'winmanager'
 Plugin 'matchit.zip'
+Plugin 'a.vim'
 Plugin 'luochen1990/rainbow'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
@@ -54,8 +54,6 @@ let g:airline_right_sep=''
 " configuration for easymotion {{{
 let g:EasyMotion_space_jump_first = 1
 map s <Plug>(easymotion-s)
-map j <Plug>(easymotion-j)
-map k <Plug>(easymotion-k)
 " }}} end of easymotion
 " configuration for ultisnips {{{
 let g:UltiSnipsExpandTrigger='<C-L>'
@@ -66,6 +64,10 @@ let g:ycm_confirm_extra_conf=0
 " configuration for easy align {{{
 vmap    <ENTER>     <Plug>(EasyAlign)
 nmap    gl          <Plug>(EasyAlign)
+" }}}
+" configuration for Sessions{{{
+let g:session_autoload='no'
+let g:session_autosave='no'
 " }}}
 " global configurations aka sets {{{
 scriptencoding utf-8
@@ -80,7 +82,6 @@ set number relativenumber
 set fileencodings=ucs-bom,utf-8,cp936,latin1
 filetype plugin indent on
 syntax on
-let g:session_autosave = 'yes'
 " }}} end of global conf
 " CtrlP config {{{
 set wildignore+=*.so,*.swp,*.zip
@@ -112,6 +113,10 @@ nnoremap <Leader>vr- :vertical resize -3<cr>
 nnoremap <Leader>fs A//{{{<esc>
 nnoremap <Leader>fe A//}}}<esc>
 
+nnoremap h 	<C-W><C-H>
+nnoremap j 	<C-W><C-J>
+nnoremap k 	<C-W><C-K>
+nnoremap l 	<C-W><C-L>
 inoremap e	A
 inoremap b	I
 
@@ -201,19 +206,37 @@ function! EditForGTEST()
 	norm ggO#include "gtest/gtest.h
 endfunction
 
+function! SwapBetweenHdrSrc()
+	let root = expand('%:r')
+	let ext  = expand('%:e')
+	if ext =~ 'h'
+		if filereadable(root . '.c')
+			exec 'e ' . root . '.c'
+		endif
+		if filereadable(root . '.cpp')
+			exec 'e ' . root . '.cpp'
+		endif
+	elseif ext =~ 'c\|cpp'
+		if filereadable(root . '.h')
+			exec 'e ' . root . '.h'
+		endif
+	endif
+endfunction
+nnoremap <Leader>aa 	:call SwapBetweenHdrSrc()<CR>
 " autocmd for different file types {{{
 augroup FTAUGRP
 	au!
 	" python & Makefile files no expand tab "
 	au FileType python,make     set noet | set ts=4
-	au FileType c,cc,cpp        set cindent
+	au FileType c,cc,cpp        set cindent | set fdm=expr
+	au FileType c,cc,cpp        set foldexpr=getline(v:lnum)=~'^\\a'&&getline(v:lnum+1)=~'^{'?'>1':1
 	au FileType vim 			set fdm=marker
 augroup END
 " }}}
 
 " project specific settings {{{
 if getcwd() =~ 'hione'
-	set path=.,/home/warm/Doc/Code/hione/kernel/linux-4.1/include,
+	set path=.,/home/warm/Doc/Code/hione/kernel/linux-4.1/include,/home/warm/Doc/Code/hione/kernel/linux-4.1/arch/arm64/include,
 	cs add ~/Doc/cscope/kernel/cscope.out
 	cs add ~/Doc/cscope/hisi_ap/cscope.out
 endif
