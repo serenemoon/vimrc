@@ -1,0 +1,16 @@
+#!/bin/bash
+OLDDIR=$PWD
+echo $OLDDIR
+cd "$VIM_FILEDIR"
+case "$VIM_FILEEXT" in
+    \.c|\.cpp|\.cc|\.cxx)
+        "$VIM_FILEDIR/$VIM_FILENOEXT"
+        ;;
+    \.py|\.pyw)
+        python3 "$VIM_FILENAME"
+        ;;
+    *)
+        echo "Unexpected file type: $VIM_FILEEXT"
+esac
+cd "$OLDDIR"
+# vim:ft=sh

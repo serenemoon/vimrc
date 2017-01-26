@@ -27,7 +27,7 @@ Plugin 'easymotion/vim-easymotion'
 Plugin 'junegunn/vim-easy-align'
 Plugin 'Raimondi/delimitMate'
 Plugin 'dkprice/vim-easygrep'
-Plugin 'minibufexplorerpp'
+"Plugin 'minibufexplorerpp'
 Plugin 'winmanager'
 Plugin 'matchit.zip'
 Plugin 'a.vim'
@@ -35,13 +35,27 @@ Plugin 'luochen1990/rainbow'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'altercation/vim-colors-solarized'
-
+Plugin 'skywind3000/vimmake'
 call vundle#end()
 filetype plugin indent on
 " }}} end of bundle
 colorscheme molokai
 let mapleader=","
+" configuration for vimmake {{{
+let g:vimmake_mode = {'gcc':'async', 'run':'async'}
+let g:vimmake_path = expand('~') . '/.vimgit'
 
+function! OpenQuickfixSilently()
+	let save_winnr = winnr()
+	exec "copen"
+	exec save_winnr . " wincmd w"
+endfunction
+
+noremap  <F9>        :call OpenQuickfixSilently()<cr>:VimTool gcc<cr>
+noremap  <F10>       :call OpenQuickfixSilently()<cr>:VimTool run<cr>
+inoremap <F9> 	<ESC>:call OpenQuickfixSilently()<cr>:VimTool gcc<cr>
+inoremap <F10> 	<ESC>:call OpenQuickfixSilently()<cr>:VimTool run<cr>
+" }}}
 " configuration for airline {{{
 set t_Co=256
 set laststatus=2
@@ -77,7 +91,7 @@ set cursorcolumn cursorline
 set ts=4
 set sw=4
 set autoindent
-set noexpandtab
+set expandtab
 set number relativenumber
 set fileencodings=ucs-bom,utf-8,cp936,latin1
 filetype plugin indent on
@@ -94,6 +108,8 @@ nnoremap <Leader>src    :source ~/.vimrc<CR>
 nnoremap <Leader>q      :q<CR>
 nnoremap <Leader>qa     :qa<CR>
 
+nnoremap <Leader>cc 	:copen<CR>
+nnoremap <Leader>co 	:cclose<CR>
 ""nnoremap <Leader>bl	:blast<CR>
 ""nnoremap <Leader>bn	:bnext<CR>
 ""nnoremap <Leader>bp	:bprev<CR>
@@ -121,6 +137,7 @@ inoremap e	A
 inoremap b	I
 
 nnoremap w    :w<CR>
+inoremap w    <ESC>:w<CR>
 nnoremap q	:q<CR>
 nnoremap <Leader>h  <C-W>h
 nnoremap <Leader>j  <C-W>j
@@ -130,15 +147,8 @@ nnoremap <Leader>tn :tabnext<CR>
 nnoremap <Leader>tp :tabprev<CR>
 nnoremap <Leader>tl :tablast<CR>
 nnoremap <Leader>tf :tabfirst<CR>
-" map F12 for python run
-noremap  <F12>      :!python3 %<CR>
-noremap! <F12>      <ESC>:w<CR>:!python3 %<CR>
 " }}} end of Maps
-inoremap (  ()<Left>
-inoremap [  []<Left>
-inoremap {  {}<Left>
-"}])
-inoremap "  ""<Left>
+
 unlet mapleader
 function! OpenNERDTree()
 	if !empty(expand("%")) && expand("%") !~ "NERD"
@@ -202,7 +212,7 @@ function! EditForGTEST()
 	%s/void \(.*\)::\(.*\)()/TEST(\1,\2)/g
 	%s/CPPUNIT_ASSERT/EXPECT_TRUE/g
 	exec "g/" . delete_lines . "/d"
-	exec "%s/{\_s*}//g"
+	exec "%s/{\\_s*}//g"
 	norm ggO#include "gtest/gtest.h
 endfunction
 
@@ -240,6 +250,11 @@ if getcwd() =~ 'hione'
 	cs add ~/Doc/cscope/kernel/cscope.out
 	cs add ~/Doc/cscope/hisi_ap/cscope.out
 endif
+
+function! AddToPath()
+	mkfile = getcwd() . '/Android.mk'
+
+endfunction
 " }}}
 ""let Tlist_Show_One_File=0                    " 只显示当前文件的tags
 ""let Tlist_Exit_OnlyWindow=1                  " 如果Taglist窗口是最后一个窗口则退出Vim
