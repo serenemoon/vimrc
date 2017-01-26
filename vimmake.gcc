@@ -1,0 +1,16 @@
+#! /bin/bash
+cd "$VIM_FILEDIR"
+case "$VIM_FILEEXT" in
+    \.c )
+        gcc -g -Wall "$VIM_FILEPATH" -o "$VIM_FILEDIR/$VIM_FILENOEXT"
+        ;;
+    \.cpp|\.cc|\.cxx)
+        g++ -g -Wall "$VIM_FILEPATH" -o "$VIM_FILEDIR/$VIM_FILENOEXT"
+        ;;
+    *)
+        echo "Not supported file."
+        ;;
+esac
+
+# vim:ft=sh
+

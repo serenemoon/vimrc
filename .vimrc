@@ -27,7 +27,7 @@ Plugin 'easymotion/vim-easymotion'
 Plugin 'junegunn/vim-easy-align'
 Plugin 'Raimondi/delimitMate'
 Plugin 'dkprice/vim-easygrep'
-Plugin 'minibufexplorerpp'
+"Plugin 'minibufexplorerpp'
 Plugin 'winmanager'
 Plugin 'matchit.zip'
 Plugin 'a.vim'
@@ -35,13 +35,20 @@ Plugin 'luochen1990/rainbow'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'altercation/vim-colors-solarized'
-
+Plugin 'skywind3000/vimmake'
 call vundle#end()
 filetype plugin indent on
 " }}} end of bundle
 colorscheme molokai
 let mapleader=","
-
+" configuration for vimmake {{{
+let g:vimmake_mode = {'gcc':'async', 'run':'async'}
+let g:vimmake_path = expand('~') . '/.vimgit'
+noremap  <F9>        :VimTool gcc<cr>
+noremap  <F10>       :VimTool run<cr>
+inoremap <F9> 	<ESC>:VimTool gcc<cr>
+inoremap <F10> 	<ESC>:VimTool run<cr>
+" }}}
 " configuration for airline {{{
 set t_Co=256
 set laststatus=2
@@ -77,7 +84,7 @@ set cursorcolumn cursorline
 set ts=4
 set sw=4
 set autoindent
-set noexpandtab
+set expandtab
 set number relativenumber
 set fileencodings=ucs-bom,utf-8,cp936,latin1
 filetype plugin indent on
@@ -121,6 +128,7 @@ inoremap e	A
 inoremap b	I
 
 nnoremap w    :w<CR>
+inoremap w    <ESC>:w<CR>
 nnoremap q	:q<CR>
 nnoremap <Leader>h  <C-W>h
 nnoremap <Leader>j  <C-W>j
@@ -202,7 +210,7 @@ function! EditForGTEST()
 	%s/void \(.*\)::\(.*\)()/TEST(\1,\2)/g
 	%s/CPPUNIT_ASSERT/EXPECT_TRUE/g
 	exec "g/" . delete_lines . "/d"
-	exec "%s/{\_s*}//g"
+	exec "%s/{\\_s*}//g"
 	norm ggO#include "gtest/gtest.h
 endfunction
 
@@ -240,6 +248,11 @@ if getcwd() =~ 'hione'
 	cs add ~/Doc/cscope/kernel/cscope.out
 	cs add ~/Doc/cscope/hisi_ap/cscope.out
 endif
+
+function! AddToPath()
+	mkfile = getcwd() . '/Android.mk'
+
+endfunction
 " }}}
 ""let Tlist_Show_One_File=0                    " 只显示当前文件的tags
 ""let Tlist_Exit_OnlyWindow=1                  " 如果Taglist窗口是最后一个窗口则退出Vim
