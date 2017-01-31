@@ -179,7 +179,7 @@ function! FindCSDB()
 	return csdb
 endfunction
 if has("cscope")
-	set csto=1
+	set csto=0
 	set cst
 	set nocsverb
 	let csdb=FindCSDB()
@@ -201,6 +201,10 @@ function! BuildCscopeDatabase(rebuild)
 		silent !cscope -Rb
 	endif
 	exec "cs add cscope.out " . getcwd()
+	if filereadable(csdb . '/tags')
+		set tags=''
+		set tags+=csdb . '/tags'
+	endif
 	exec "cd " . cwd
 endfunction
 " }}} end of cscope
