@@ -42,11 +42,11 @@ filetype plugin indent on
 colorscheme molokai
 let mapleader=","
 " configuration for vimmake {{{
-let g:vimmake_mode = {'gcc':'async', 'run':'async'}
-let g:vimmake_path = expand('~') . '/.vimgit'
-noremap  <F9>        :VimTool gcc<cr>
+let g:vimmake_mode = {'make':'async', 'run':'async'}
+let g:vimmake_path = expand('~') . '/vimrc'
+noremap  <F9>        :VimTool make<cr>
 noremap  <F10>       :VimTool run<cr>
-inoremap <F9> 	<ESC>:VimTool gcc<cr>
+inoremap <F9> 	<ESC>:VimTool make<cr>
 inoremap <F10> 	<ESC>:VimTool run<cr>
 " }}}
 " configuration for airline {{{
@@ -101,6 +101,8 @@ nnoremap <Leader>src    :source ~/.vimrc<CR>
 nnoremap <Leader>q      :q<CR>
 nnoremap <Leader>qa     :qa<CR>
 
+nnoremap <Leader>co 	:copen<CR>
+nnoremap <Leader>cc 	:cclose<CR>
 ""nnoremap <Leader>bl	:blast<CR>
 ""nnoremap <Leader>bn	:bnext<CR>
 ""nnoremap <Leader>bp	:bprev<CR>
@@ -239,9 +241,9 @@ nnoremap <Leader>aa 	:call SwapBetweenHdrSrc()<CR>
 augroup FTAUGRP
 	au!
 	" python & Makefile files no expand tab "
-	au FileType python,make     set noet | set ts=4
+	au FileType python,make     setlocal noet | setlocal ts=4
 	au FileType c,cc,cpp        set cindent | set fdm=expr
-	au FileType c,cc,cpp        set foldexpr=getline(v:lnum)=~'^\\a'&&getline(v:lnum+1)=~'^{'?'>1':1
+	au FileType c,cc,cpp        set foldexpr=getline(v:lnum)=~')'&&getline(v:lnum+1)=~'^{'?'>1':1
 	au FileType vim 			set fdm=marker
 augroup END
 " }}}

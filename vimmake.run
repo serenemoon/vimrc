@@ -1,7 +1,5 @@
 #!/bin/bash
 cd "$VIM_FILEDIR"
-"$VIM_FILEDIR/$VIM_FILENOEXT"
-
 case "$VIM_FILEEXT" in
     \.c|\.cpp|\.cc|\.cxx)
         "$VIM_FILEDIR/$VIM_FILENOEXT"
@@ -11,5 +9,6 @@ case "$VIM_FILEEXT" in
         ;;
     *)
         echo "Unexpected file type: $VIM_FILEEXT"
+        ;;
 esac
 # vim:ft=sh
