@@ -42,7 +42,7 @@ filetype plugin indent on
 colorscheme molokai
 let mapleader=","
 " configuration for vimmake {{{
-let g:vimmake_mode = {'gcc':'async', 'run':'async'}
+let g:vimmake_mode = {'make':'async', 'run':'async'}
 let g:vimmake_path = expand('~') . '/.vimgit'
 
 function! OpenQuickfixSilently()
@@ -51,9 +51,9 @@ function! OpenQuickfixSilently()
 	exec save_winnr . " wincmd w"
 endfunction
 
-noremap  <F9>        :call OpenQuickfixSilently()<cr>:VimTool gcc<cr>
+noremap  <F9>        :call OpenQuickfixSilently()<cr>:VimTool make<cr>
 noremap  <F10>       :call OpenQuickfixSilently()<cr>:VimTool run<cr>
-inoremap <F9> 	<ESC>:call OpenQuickfixSilently()<cr>:VimTool gcc<cr>
+inoremap <F9> 	<ESC>:call OpenQuickfixSilently()<cr>:VimTool make<cr>
 inoremap <F10> 	<ESC>:call OpenQuickfixSilently()<cr>:VimTool run<cr>
 " }}}
 " configuration for airline {{{
@@ -108,8 +108,8 @@ nnoremap <Leader>src    :source ~/.vimrc<CR>
 nnoremap <Leader>q      :q<CR>
 nnoremap <Leader>qa     :qa<CR>
 
-nnoremap <Leader>cc 	:copen<CR>
-nnoremap <Leader>co 	:cclose<CR>
+nnoremap <Leader>co 	:copen<CR>
+nnoremap <Leader>cc 	:cclose<CR>
 ""nnoremap <Leader>bl	:blast<CR>
 ""nnoremap <Leader>bn	:bnext<CR>
 ""nnoremap <Leader>bp	:bprev<CR>
@@ -181,7 +181,7 @@ function! FindCSDB()
 	return csdb
 endfunction
 if has("cscope")
-	set csto=1
+	set csto=0
 	set cst
 	set nocsverb
 	let csdb=FindCSDB()
@@ -203,6 +203,10 @@ function! BuildCscopeDatabase(rebuild)
 		silent !cscope -Rb
 	endif
 	exec "cs add cscope.out " . getcwd()
+	if filereadable(csdb . '/tags')
+		set tags=''
+		set tags+=csdb . '/tags'
+	endif
 	exec "cd " . cwd
 endfunction
 " }}} end of cscope
@@ -237,9 +241,8 @@ nnoremap <Leader>aa 	:call SwapBetweenHdrSrc()<CR>
 augroup FTAUGRP
 	au!
 	" python & Makefile files no expand tab "
-	au FileType python,make     set noet | set ts=4
-	au FileType c,cc,cpp        set cindent | set fdm=expr
-	au FileType c,cc,cpp        set foldexpr=getline(v:lnum)=~'^\\a'&&getline(v:lnum+1)=~'^{'?'>1':1
+	au FileType python,make     setlocal noet | setlocal ts=4
+	au FileType c,cc,cpp        set cindent | set fdm=expr | setlocal foldexpr=getline(v:lnum)=~')'&&getline(v:lnum+1)=~'^{'?'>1':1
 	au FileType vim 			set fdm=marker
 augroup END
 " }}}

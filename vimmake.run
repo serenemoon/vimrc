@@ -1,6 +1,5 @@
 #!/bin/bash
 OLDDIR=$PWD
-echo $OLDDIR
 cd "$VIM_FILEDIR"
 case "$VIM_FILEEXT" in
     \.c|\.cpp|\.cc|\.cxx)
@@ -11,6 +10,7 @@ case "$VIM_FILEEXT" in
         ;;
     *)
         echo "Unexpected file type: $VIM_FILEEXT"
+        ;;    
 esac
 cd "$OLDDIR"
 # vim:ft=sh
