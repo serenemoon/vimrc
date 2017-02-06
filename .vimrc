@@ -43,7 +43,7 @@ colorscheme molokai
 let mapleader=","
 " configuration for vimmake {{{
 let g:vimmake_mode = {'make':'async', 'run':'async'}
-let g:vimmake_path = expand('~') . '/.vimgit'
+let g:vimmake_path = expand('~') . '/vimrc'
 
 function! OpenQuickfixSilently()
 	let save_winnr = winnr()
