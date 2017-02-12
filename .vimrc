@@ -1,44 +1,7 @@
-﻿set nocompatible
-"let g:UltiSnipsUsePythonVersion=3
-" configuration for bundle {{{
-set nocompatible
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+﻿let SCRIPT_DIR=expand('~/vimrc/vimscripts/')
+silent! exec 'source ' . SCRIPT_DIR . 'bundle_me.vim'
+silent! exec 'source ' . SCRIPT_DIR . 'swap_me.vim'
 
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'tomasr/molokai'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
-Plugin 'majutsushi/tagbar'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'tpope/vim-fugitive'
-Plugin 'xolox/vim-notes'
-Plugin 'xolox/vim-misc'
-Plugin 'xolox/vim-session'
-
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'easymotion/vim-easymotion'
-Plugin 'junegunn/vim-easy-align'
-Plugin 'Raimondi/delimitMate'
-Plugin 'dkprice/vim-easygrep'
-"Plugin 'minibufexplorerpp'
-Plugin 'winmanager'
-Plugin 'matchit.zip'
-Plugin 'a.vim'
-Plugin 'luochen1990/rainbow'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'skywind3000/vimmake'
-call vundle#end()
-filetype plugin indent on
-" }}} end of bundle
 colorscheme molokai
 let mapleader=","
 " configuration for vimmake {{{
@@ -161,6 +124,7 @@ nnoremap <F3>   :call OpenNERDTree()<CR>
 nnoremap <F2>   :TagbarToggle<CR>
 " configuration for cscope {{{
 " cscope key maps
+set cscopequickfix=s-,c-,d-,i-,t-,e-
 nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
 nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>
 nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>
@@ -169,19 +133,18 @@ nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>
 nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
 nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
 nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>
-
 nnoremap    <F5>    :call BuildCscopeDatabase(0)<CR>
 nnoremap    <S-F5>  :call BuildCscopeDatabase(1)<CR>
 
 function! FindCSDB()
-	let csdb=findfile('cscope.out',';')
+	let csdb=findfile('cscope.out','.;')
 	if csdb == 'cscope.out'
 		let csdb=getcwd() . '/cscope.out'
 	endif
 	return csdb
 endfunction
 if has("cscope")
-	set csto=0
+	set csto=1
 	set cst
 	set nocsverb
 	let csdb=FindCSDB()
@@ -220,23 +183,6 @@ function! EditForGTEST()
 	norm ggO#include "gtest/gtest.h
 endfunction
 
-function! SwapBetweenHdrSrc()
-	let root = expand('%:r')
-	let ext  = expand('%:e')
-	if ext =~ 'h'
-		if filereadable(root . '.c')
-			exec 'e ' . root . '.c'
-		endif
-		if filereadable(root . '.cpp')
-			exec 'e ' . root . '.cpp'
-		endif
-	elseif ext =~ 'c\|cpp'
-		if filereadable(root . '.h')
-			exec 'e ' . root . '.h'
-		endif
-	endif
-endfunction
-nnoremap <Leader>aa 	:call SwapBetweenHdrSrc()<CR>
 " autocmd for different file types {{{
 augroup FTAUGRP
 	au!
@@ -259,6 +205,10 @@ function! AddToPath()
 
 endfunction
 " }}}
+
+if filereadable('swap.vim')
+	source ./swap.vim
+endif
 ""let Tlist_Show_One_File=0                    " 只显示当前文件的tags
 ""let Tlist_Exit_OnlyWindow=1                  " 如果Taglist窗口是最后一个窗口则退出Vim
 ""let Tlist_Use_Right_Window=1                 " 在右侧窗口中显示
