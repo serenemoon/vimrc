@@ -105,6 +105,7 @@ set wildignore+=*.so,*.swp,*.zip
 nnoremap <Leader>ww	    :w<CR>
 nnoremap <Leader>ee	    :e ~/.vimrc<CR>
 nnoremap <Leader>src    :source ~/.vimrc<CR>
+nnoremap <Leader>ss     :source %<CR>
 nnoremap <Leader>q      :q<CR>
 nnoremap <Leader>qa     :qa<CR>
 
@@ -238,11 +239,20 @@ function! SwapBetweenHdrSrc()
 endfunction
 nnoremap <Leader>aa 	:call SwapBetweenHdrSrc()<CR>
 " autocmd for different file types {{{
+function! StartOfFold(lnum)
+	let g:oneline_proto = getline(a:lnum) =~ '^\w.*)$'
+				\ && getline(a:lnum + 1) =~ '^{'
+	let g:twoline_proto = getline(a:lnum) =~ '^\w'
+				\ && getline(a:lnum + 1) =~ ')$'
+				\ && getline(a:lnum + 2) =~ '^{'
+	return g:oneline_proto || g:twoline_proto
+endfunction
+
 augroup FTAUGRP
 	au!
 	" python & Makefile files no expand tab "
 	au FileType python,make     setlocal noet | setlocal ts=4
-	au FileType c,cc,cpp        set cindent | set fdm=expr | setlocal foldexpr=getline(v:lnum)=~')'&&getline(v:lnum+1)=~'^{'?'>1':1
+	au FileType c,cc,cpp        set cindent | setlocal fdm=expr | setlocal fde=StartOfFold(v:lnum)?'>1':1
 	au FileType vim 			set fdm=marker
 augroup END
 " }}}
