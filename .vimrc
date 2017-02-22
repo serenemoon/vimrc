@@ -145,7 +145,7 @@ function! FindCSDB()
 	return csdb
 endfunction
 if has("cscope")
-	set csto=1
+	set csto=0
 	set cst
 	set nocsverb
 	let csdb=FindCSDB()
@@ -212,13 +212,22 @@ endif
 
 function! AddToPath()
 	mkfile = getcwd() . '/Android.mk'
-
 endfunction
 " }}}
+function! PCLintInfo()
+	set efm=%f:%l:\ $\ %t%m
+endfunction
 
-if filereadable('swap.vim')
-	source ./swap.vim
-endif
+function! PcLintToQuickfix()
+	g!/\n^vendor\|^vendor/d
+	%s/^\s\+//
+	g!/^vendor/s/^/===/
+	g/\[Reference[^]]*\]/s///
+	g/^===/,/^===/-1 j
+	sort
+	%s///g
+endfunction
+
 ""let Tlist_Show_One_File=0                    " 只显示当前文件的tags
 ""let Tlist_Exit_OnlyWindow=1                  " 如果Taglist窗口是最后一个窗口则退出Vim
 ""let Tlist_Use_Right_Window=1                 " 在右侧窗口中显示
