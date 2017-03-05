@@ -20,7 +20,7 @@ case "$VIM_FILEEXT" in
         echo "$VIM_FILENOEXT:$VIM_FILENAME" >> Makefile
         echo -e "\t\${CC} \${CFLAGS} \$^ -o \$@"
         make
-        rm Makefile
+        #rm Makefile
         ;;
     *)
         echo "Not supported file."

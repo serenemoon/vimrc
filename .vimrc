@@ -57,6 +57,8 @@ set autoindent
 set expandtab
 set number relativenumber
 set fileencodings=ucs-bom,utf-8,cp936,latin1
+set shiftround
+set ignorecase smartcase
 filetype plugin indent on
 syntax on
 " }}} end of global conf
@@ -65,15 +67,15 @@ set wildignore+=*.so,*.swp,*.zip
 " }}} end of CtrlP
 "set makeprg=mingw32-make.exe
 " Maps: {{{
-nnoremap <Leader>ww	    :w<CR>
-nnoremap <Leader>ee	    :e ~/.vimrc<CR>
-nnoremap <Leader>src    :source ~/.vimrc<CR>
-nnoremap <Leader>ss     :source %<CR>
-nnoremap <Leader>q      :q<CR>
-nnoremap <Leader>qa     :qa<CR>
+nnoremap <Leader>ww  :w<CR>
+nnoremap <Leader>ee  :e ~/.vimrc<CR>
+nnoremap <Leader>src :source ~/.vimrc<CR>
+nnoremap <Leader>ss  :source %<CR>
+nnoremap <Leader>qq  :q<CR>
+nnoremap <Leader>qa  :qa<CR>
 
-nnoremap <Leader>co 	:copen<CR>
-nnoremap <Leader>cc 	:cclose<CR>
+nnoremap <Leader>co  :copen<CR>
+nnoremap <Leader>cc  :cclose<CR>
 ""nnoremap <Leader>bl	:blast<CR>
 ""nnoremap <Leader>bn	:bnext<CR>
 ""nnoremap <Leader>bp	:bprev<CR>

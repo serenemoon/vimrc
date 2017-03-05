@@ -3,6 +3,7 @@
 
 import time
 import os
+HOME_DIR=os.path.expanduser('~')
 
 TEST_BASEDIR=os.path.expanduser('~/Doc/Test')
 TEST_DIRS=['c', 'cc', 'python', 'bash', 'make']
@@ -34,6 +35,7 @@ def ShAliasSetup():
 		if len(alias_cmds):
 			full_cmds = ['alias {0}="cd {1}"'.format(v, TEST_BASEDIR + os.path.sep + v[2:]) for v in alias_cmds]
 			f.writelines('\n'.join(full_cmds))
+		f.write('\nalias cdu="cd .."')
 	while not os.path.exists(bash_file):
 		time.sleep(1)		
 	if len(alias_cmds) != 0:
