@@ -6,21 +6,26 @@ if [ -f Makefile ]; then
     exit 0
 fi
 
+if [ -f build/Makefile ]; then
+    cd build;make
+    exit 0
+fi
+
 # 
 case "$VIM_FILEEXT" in
     \.c )
         echo -e "CC=gcc\nCFLAGS=-g -Wall" > Makefile
         echo "$VIM_FILENOEXT:$VIM_FILENAME" >> Makefile
-        echo -e "\t\${CC} \${CFLAGS} \$^ -o \$@"
+        echo -e "\t\${CC} \${CFLAGS} \$^ -o \$@" >> Makefile
         make
         rm Makefile
         ;;
     \.cpp|\.cc|\.cxx)
         echo -e "CC=g++\nCFLAGS=-g -Wall" > Makefile
         echo "$VIM_FILENOEXT:$VIM_FILENAME" >> Makefile
-        echo -e "\t\${CC} \${CFLAGS} \$^ -o \$@"
+        echo -e "\t\${CC} \${CFLAGS} \$^ -o \$@" >> Makefile
         make
-        #rm Makefile
+        rm Makefile
         ;;
     *)
         echo "Not supported file."

@@ -35,7 +35,7 @@ Plugin 'vim-airline/vim-airline-themes'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'skywind3000/vimmake'
 
-Plugin 'Shougo/unite.vim'
+"Plugin 'Shougo/unite.vim'
 Plugin 'Shougo/denite.nvim'
 call vundle#end()
 filetype plugin indent syntax on

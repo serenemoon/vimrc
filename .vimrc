@@ -180,11 +180,19 @@ endfunction
 function! EditForGTEST()
 	let delete_lines="SourcePrefix.h\\|CExampleTest.h\\|CPPUNIT_TEST\\|setUp\\|tearDown"
 	%s/void \(.*\)::\(.*\)()/TEST(\1,\2)/g
+	%s/CPPUNIT_ASSERT_EQUAL/EXPECT_EQ/g
 	%s/CPPUNIT_ASSERT/EXPECT_TRUE/g
 	exec "g/" . delete_lines . "/d"
 	exec "%s/{\\_s*}//g"
 	norm ggO#include "gtest/gtest.h
 endfunction
+command! EFG call EditForGTEST()
+
+function! FileFormat()
+       %s/\s\+$//
+       retab
+endfunction
+command! FF call FileFormat()
 
 " autocmd for different file types {{{
 function! StartOfFold(lnum)
