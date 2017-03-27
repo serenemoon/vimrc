@@ -8,6 +8,9 @@ case "$VIM_FILEEXT" in
     \.py|\.pyw)
         python3 "$VIM_FILENAME"
         ;;
+    \.sh)
+        bash "$VIM_FILENAME"
+        ;;
     *)
         echo "Unexpected file type: $VIM_FILEEXT"
         ;;    

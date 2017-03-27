@@ -69,28 +69,22 @@ set wildignore+=*.so,*.swp,*.zip
 " Maps: {{{
 nnoremap <Leader>ww  :w<CR>
 nnoremap <Leader>ee  :e ~/.vimrc<CR>
-nnoremap <Leader>src :source ~/.vimrc<CR>
-nnoremap <Leader>ss  :source %<CR>
+nnoremap <Leader>ss  :source ~/.vimrc<CR>
+nnoremap <Leader>sl  :exec getline('.')<CR>
+nnoremap <Leader>src :source %<CR>
 nnoremap <Leader>qq  :q<CR>
 nnoremap <Leader>qa  :qa<CR>
 
 nnoremap <Leader>co  :copen<CR>
 nnoremap <Leader>cc  :cclose<CR>
-""nnoremap <Leader>bl	:blast<CR>
-""nnoremap <Leader>bn	:bnext<CR>
-""nnoremap <Leader>bp	:bprev<CR>
-""nnoremap <Leader>bf	:bfirst<CR>
-""nnoremap <Leader>bc	:bunload<CR>
-""nnoremap <Tab>      :bnext<cr>
-""nnoremap <S-Tab>    :bprev<cr>
 nnoremap n		:nohl<CR>
 nnoremap <Leader>nh :nohl<CR>
 
 "resize window size
-nnoremap <Leader>r= :resize +3<cr>
-nnoremap <Leader>r- :resize -3<cr>
-nnoremap <Leader>vr= :vertical resize +3<cr>
-nnoremap <Leader>vr- :vertical resize -3<cr>
+nnoremap <Leader>r= :resize +10<cr>
+nnoremap <Leader>r- :resize -10<cr>
+nnoremap <Leader>vr= :vertical resize +10<cr>
+nnoremap <Leader>vr- :vertical resize -10<cr>
 
 nnoremap <Leader>fs A//{{{<esc>
 nnoremap <Leader>fe A//}}}<esc>
@@ -99,8 +93,8 @@ nnoremap h 	<C-W><C-H>
 nnoremap j 	<C-W><C-J>
 nnoremap k 	<C-W><C-K>
 nnoremap l 	<C-W><C-L>
+nnoremap e	A
 inoremap e	A
-inoremap b	I
 
 nnoremap w    :w<CR>
 inoremap w    <ESC>:w<CR>
@@ -113,6 +107,8 @@ nnoremap <Leader>tn :tabnext<CR>
 nnoremap <Leader>tp :tabprev<CR>
 nnoremap <Leader>tl :tablast<CR>
 nnoremap <Leader>tf :tabfirst<CR>
+
+
 " }}} end of Maps
 
 unlet mapleader
@@ -189,8 +185,8 @@ endfunction
 command! EFG call EditForGTEST()
 
 function! FileFormat()
-       %s/\s\+$//
-       retab
+	%s/\s\+$//
+	retab
 endfunction
 command! FF call FileFormat()
 
