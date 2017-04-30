@@ -10,7 +10,7 @@ let g:vimmake_path = expand('~') . '/vimrc'
 
 function! OpenQuickfixSilently()
 	let save_winnr = winnr()
-	exec "copen"
+	exec "copen 20"
 	exec save_winnr . " wincmd w"
 endfunction
 
@@ -75,10 +75,11 @@ nnoremap <Leader>src :source %<CR>
 nnoremap <Leader>qq  :q<CR>
 nnoremap <Leader>qa  :qa<CR>
 
-nnoremap <Leader>co  :copen<CR>
+nnoremap <Leader>co  :bot copen 20<CR>
 nnoremap <Leader>cc  :cclose<CR>
 nnoremap n		:nohl<CR>
 nnoremap <Leader>nh :nohl<CR>
+nnoremap K			:let @/="<C-R><C-W>"<CR>
 
 "resize window size
 nnoremap <Leader>r= :resize +10<cr>
@@ -130,7 +131,7 @@ nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>
 nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>
 nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>
 nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
-nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+nmap <C-\>i :cs find i <C-R>=expand("<cfile>")<CR><CR>
 nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 nnoremap    <F5>    :call BuildCscopeDatabase(0)<CR>
 nnoremap    <S-F5>  :call BuildCscopeDatabase(1)<CR>
@@ -223,6 +224,17 @@ endfunction
 function! PCLintInfo()
 	set efm=%f:%l:\ $\ %t%m
 endfunction
+function! NewPcLintToQuickfix()
+	%s:\\:/:g
+	%s:^:/home/warm/Doc/Code/hione/:
+endfunction
+function! UseCurFileAsQFFile()
+	call NewPcLintToQuickfix()
+	call PCLintInfo()
+	w
+	cfile %
+	copen
+endfunction
 
 function! PcLintToQuickfix()
 	g!/\n^vendor\|^vendor/d
@@ -233,6 +245,32 @@ function! PcLintToQuickfix()
 	sort
 	%s///g
 endfunction
+
+let g:altwinnrs = []
+function! PickUnpickWindow()
+	let cur_winnr = winnr()
+	let idx = index(g:altwinnrs, cur_winnr)
+	if -1 == idx
+		call add(g:altwinnrs, cur_winnr)
+		echomsg bufname("%") . " picked."
+	else
+		unlet g:altwinnrs[idx]
+		echomsg bufname("%") . " unpicked."
+	endif
+endfunction
+nnoremap <leader>pc :call PickUnpickWindow()<CR>
+
+function! AltNext()
+	let cur_winnr = winnr()
+	for nr in g:altwinnrs
+		if nr != cur_winnr
+			exec nr . " wincmd w"
+			norm nzz
+		endif
+	endfor
+	exec cur_winnr . " wincmd w"
+endfunction
+nnoremap <C-K> 	:call AltNext()<CR>
 
 ""let Tlist_Show_One_File=0                    " 只显示当前文件的tags
 ""let Tlist_Exit_OnlyWindow=1                  " 如果Taglist窗口是最后一个窗口则退出Vim

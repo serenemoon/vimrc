@@ -4,3 +4,5 @@ alias cdpython="cd /home/warm/Doc/Test/python"
 alias cdbash="cd /home/warm/Doc/Test/bash"
 alias cdmake="cd /home/warm/Doc/Test/make"
 alias cdu="cd .."
+
+alias cdu="cd .."

@@ -6,7 +6,7 @@ case "$VIM_FILEEXT" in
         "$VIM_FILEDIR/$VIM_FILENOEXT"
         ;;
     \.py|\.pyw)
-        python3 "$VIM_FILENAME"
+        cd ${VIM_CWD};python3 "$VIM_FILEPATH"
         ;;
     \.sh)
         bash "$VIM_FILENAME"
