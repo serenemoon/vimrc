@@ -1,7 +1,10 @@
 ﻿let SCRIPT_DIR=expand('~/vimrc/vimscripts/')
 silent! exec 'source ' . SCRIPT_DIR . 'bundle_me.vim'
 silent! exec 'source ' . SCRIPT_DIR . 'swap_me.vim'
-
+silent! exec 'source ' . SCRIPT_DIR . 'denite_me.vim'
+silent! exec 'source ' . SCRIPT_DIR . 'ycm_me.vim'
+silent! exec 'source ' . SCRIPT_DIR . 'ctrlp_me.vim'
+noremap <nowait> <ESC> <ESC>
 colorscheme molokai
 let mapleader=","
 " configuration for vimmake {{{
@@ -10,7 +13,7 @@ let g:vimmake_path = expand('~') . '/vimrc'
 
 function! OpenQuickfixSilently()
 	let save_winnr = winnr()
-	exec "copen 20"
+	exec "copen 15"
 	exec save_winnr . " wincmd w"
 endfunction
 
@@ -34,9 +37,6 @@ map s <Plug>(easymotion-s)
 " }}} end of easymotion
 " configuration for ultisnips {{{
 let g:UltiSnipsExpandTrigger='<C-L>'
-" }}}
-" configuration for YCM {{{
-let g:ycm_confirm_extra_conf=0
 " }}}
 " configuration for easy align {{{
 vmap    <ENTER>     <Plug>(EasyAlign)
@@ -62,9 +62,6 @@ set ignorecase smartcase
 filetype plugin indent on
 syntax on
 " }}} end of global conf
-" CtrlP config {{{
-set wildignore+=*.so,*.swp,*.zip
-" }}} end of CtrlP
 "set makeprg=mingw32-make.exe
 " Maps: {{{
 nnoremap <Leader>ww  :w<CR>
@@ -75,7 +72,7 @@ nnoremap <Leader>src :source %<CR>
 nnoremap <Leader>qq  :q<CR>
 nnoremap <Leader>qa  :qa<CR>
 
-nnoremap <Leader>co  :bot copen 20<CR>
+nnoremap <Leader>co  :bot copen 15<CR>
 nnoremap <Leader>cc  :cclose<CR>
 nnoremap n		:nohl<CR>
 nnoremap <Leader>nh :nohl<CR>

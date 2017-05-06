@@ -43,3 +43,21 @@ if __name__ == '__main__':
 			CreatePathFile(rootdir)
 #		for onedir in dirs:
 #			if p.exists(p.join(rootdir, onedir, 'Android.mk')):
+
+
+
+def AbstractIncPaths(filename):
+	"""TODO: Docstring for AbstractIncPaths.
+	:returns: TODO
+
+	"""
+	if not p.exists(filename):
+		return
+	content = ''.join([l.strip() + '\0' for l in open(filename, 'r').readlines()])
+	relci = re.compile(r'(?<=LOCAL_C_INCLUDES.*?=).*?(?<!\\)(?=\0)')
+	match = ' '.join(relci.findall(content))
+	match = re.sub(r'[\\\0]+', ' ', match)
+	match = re.sub(r'\$\(TOP\)', TOPPATH, match)
+	match = re.sub(r'\$\(LOCAL_PATH\)', p.dirname(filename), match)
+	match = re.split(r'\s+', match)
+	
