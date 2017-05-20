@@ -27,7 +27,7 @@ EOF
     \.cpp|\.cc|\.cxx)
         cat <<EOF > Makefile
 CC=g++
-CFLAGS=-g -Wall -std=c++11
+CFLAGS=-g -Wall -std=c++14
 $VIM_FILENOEXT:$VIM_FILENAME
 	\${CC} \${CFLAGS} -o \$@ \$^
 EOF

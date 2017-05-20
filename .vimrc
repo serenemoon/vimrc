@@ -19,8 +19,8 @@ endfunction
 
 noremap  <F9>        :call OpenQuickfixSilently()<cr>:VimTool make<cr>
 noremap  <F10>       :call OpenQuickfixSilently()<cr>:VimTool run<cr>
-inoremap <F9> 	<ESC>:call OpenQuickfixSilently()<cr>:VimTool make<cr>
-inoremap <F10> 	<ESC>:call OpenQuickfixSilently()<cr>:VimTool run<cr>
+inoremap <F9>	<ESC>:call OpenQuickfixSilently()<cr>:VimTool make<cr>
+inoremap <F10>	<ESC>:call OpenQuickfixSilently()<cr>:VimTool run<cr>
 " }}}
 " configuration for airline {{{
 set t_Co=256
@@ -77,6 +77,7 @@ nnoremap <Leader>cc  :cclose<CR>
 nnoremap n		:nohl<CR>
 nnoremap <Leader>nh :nohl<CR>
 nnoremap K			:let @/="<C-R><C-W>"<CR>
+vnoremap K			y:let @/="<C-R>""<CR>
 
 "resize window size
 nnoremap <Leader>r= :resize +10<cr>
@@ -84,13 +85,10 @@ nnoremap <Leader>r- :resize -10<cr>
 nnoremap <Leader>vr= :vertical resize +10<cr>
 nnoremap <Leader>vr- :vertical resize -10<cr>
 
-nnoremap <Leader>fs A//{{{<esc>
-nnoremap <Leader>fe A//}}}<esc>
-
-nnoremap h 	<C-W><C-H>
-nnoremap j 	<C-W><C-J>
-nnoremap k 	<C-W><C-K>
-nnoremap l 	<C-W><C-L>
+nnoremap h	<C-W><C-H>
+nnoremap j	<C-W><C-J>
+nnoremap k	<C-W><C-K>
+nnoremap l	<C-W><C-L>
 nnoremap e	A
 inoremap e	A
 
@@ -141,7 +139,7 @@ function! FindCSDB()
 	return csdb
 endfunction
 if has("cscope")
-	set csto=0
+	set csto=1
 	set cst
 	set nocsverb
 	let csdb=FindCSDB()
@@ -200,10 +198,10 @@ endfunction
 
 augroup FTAUGRP
 	au!
-	" python & Makefile files no expand tab "
+	" python & Makefile files no expand tab
 	au FileType python,make     setlocal noet | setlocal ts=4
 	au FileType c,cc,cpp        set cindent | setlocal fdm=expr | setlocal fde=StartOfFold(v:lnum)?'>1':1
-	au FileType vim 			set fdm=marker
+	au FileType vim				set fdm=marker | nnoremap <buffer> <F10> :w<CR>:source %<CR>
 augroup END
 " }}}
 
@@ -267,7 +265,27 @@ function! AltNext()
 	endfor
 	exec cur_winnr . " wincmd w"
 endfunction
-nnoremap <C-K> 	:call AltNext()<CR>
+nnoremap <C-K>	:call AltNext()<CR>
+
+function! IsUserBuf(bn)
+	let s:ignbn = ['NERD_tree', '__Tagbar__']
+	if empty(bn) | return v:false | en
+	if empty(filter(map(s:ignbn, 'bn =~ v:val'), 'v:val == 1')) | return v:true
+	el | return v:false | en
+endf
+
+function! UserBufWinDo(cmd) "{{{
+	let winnr_save = winnr()
+	let wininfo = getwininfo()
+	for win in wininfo
+		let bn = bufname(win['bufnr'])
+		if IsUserBuf(bn)
+			exec win['winnr'] . 'wincmd w'
+			exec cmd
+		en
+	endfor
+	exec winnr_save . 'wincmd w'
+endfunction "}}}
 
 ""let Tlist_Show_One_File=0                    " 只显示当前文件的tags
 ""let Tlist_Exit_OnlyWindow=1                  " 如果Taglist窗口是最后一个窗口则退出Vim
