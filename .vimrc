@@ -1,4 +1,4 @@
-﻿let g:vimrc_dir=fnamemodify('<cfile>', ':p:h')
+﻿let g:vimrc_dir=fnamemodify(resolve(expand('<sfile>')), ':p:h')
 " source self made scripts
 for plug in split(globpath(g:vimrc_dir . '/plugin', '*'))
     silent! exec 'source ' . plug
