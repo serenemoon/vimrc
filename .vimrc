@@ -1,9 +1,9 @@
-﻿let SCRIPT_DIR=expand('~/vimrc/vimscripts/')
-silent! exec 'source ' . SCRIPT_DIR . 'bundle_me.vim'
-silent! exec 'source ' . SCRIPT_DIR . 'swap_me.vim'
-silent! exec 'source ' . SCRIPT_DIR . 'denite_me.vim'
-silent! exec 'source ' . SCRIPT_DIR . 'ycm_me.vim'
-silent! exec 'source ' . SCRIPT_DIR . 'ctrlp_me.vim'
+﻿let g:vimrc_dir=fnamemodify('<cfile>', ':p:h')
+" source self made scripts
+for plug in split(globpath(g:vimrc_dir . '/plugin', '*'))
+    silent! exec 'source ' . plug
+endfor
+
 noremap <nowait> <ESC> <ESC>
 colorscheme molokai
 let mapleader=","

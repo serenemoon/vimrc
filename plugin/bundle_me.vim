@@ -1,7 +1,8 @@
 " configuration for bundle {{{1
 set nocompatible
 filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
+exec 'set rtp+=' . g:vimrc_dir . '/Vundle.vim'
+echomsg "come here vundle"
 call vundle#begin()
 
 Plugin 'SirVer/ultisnips'
@@ -38,6 +39,5 @@ Plugin 'skywind3000/vimmake'
 Plugin 'vim-syntastic/syntastic'
 Plugin 'Shougo/denite.nvim'
 call vundle#end()
-filetype plugin indent syntax on
 
 " vim: ft=vim
